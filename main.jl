@@ -80,7 +80,7 @@ function main()
     mkpath(outdir)
 
     job_id = ENV["SLURM_ARRAY_TASK_ID"]
-    CSV.write(joinpath("artifacts", outdir, "replicate_$job_id.csv"), total_df)
+    CSV.write(joinpath(outdir, "replicate_$job_id.csv"), total_df)
 
     return total_df
 end 

@@ -1,4 +1,4 @@
-function plot_rangediff(begin_range::SDMLayer, end_range::SDMLayer)
+function get_rangediff(begin_range::SDMLayer, end_range::SDMLayer)
     change_map = Int32.(deepcopy(begin_range))
     change_map.grid .= 0
 
@@ -9,6 +9,11 @@ function plot_rangediff(begin_range::SDMLayer, end_range::SDMLayer)
     change_map.grid[findall(gain.grid)] .= 3
     change_map.grid[findall(same.grid)] .= 2
     change_map.grid[findall(loss.grid)] .= 1
+    return change_map
+end 
+
+function plot_rangediff(begin_range::SDMLayer, end_range::SDMLayer)
+    change_map = get_rangediff(begin_range, end_range)
     heatmap(change_map, colormap=[:grey90,"#e17878ff",:grey40,"#78aee1ff" ])
 end
 
