@@ -34,7 +34,7 @@ include(joinpath("src", "treatments.jl"))
 function main()
     global_logger(ConsoleLogger(Error));
 
-    bioclim = read_bioclim(joinpath("data", "CHELSA_rescaled", "CHELSA_rescaled_shorter"))
+    bioclim = read_bioclim(joinpath("data"))
 
     prop_baseline = 0.25:0.05:0.75
     Ntotals = 50:50:500
@@ -67,6 +67,11 @@ function main()
         end 
     end 
     total_df = vcat(dfs...)
+
+
+    job_id = ENV["SLURM_ARRAY_TASK_ID"]
+    CSV.write(joinpath("artifacts", "replicate_$job_id.csv"), total_df)
+
     return total_df
 end 
 
