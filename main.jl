@@ -1,6 +1,6 @@
 using SpeciesDistributionToolkit
-using CairoMakie
-using GeoMakie
+# using CairoMakie
+# using GeoMakie
 using MultivariateStats
 using BiodiversityObservationNetworks
 using Statistics
@@ -10,7 +10,7 @@ using XGBoost
 using LinearAlgebra
 using DataFrames, CSV
 using Logging
-using ProgressMeter
+# using ProgressMeter
 
 const BONs = BiodiversityObservationNetworks
 const MV = MultivariateStats
@@ -26,7 +26,6 @@ include(joinpath("src", "plotting.jl"))
 include(joinpath("src", "sdm.jl"))
 include(joinpath("src", "metrics.jl"))
 include(joinpath("src", "treatments.jl"))
-
 
 
 # TODO: the BON has a chance to brick if the uncertainty surface is so uneven 
