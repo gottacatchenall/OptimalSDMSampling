@@ -27,18 +27,25 @@ include(joinpath("src", "sdm.jl"))
 include(joinpath("src", "metrics.jl"))
 include(joinpath("src", "treatments.jl"))
 
-
-# TODO: the BON has a chance to brick if the uncertainty surface is so uneven 
-# that the odds any particular value is below the 3rd halton dimension is extremely low
-
 function main()
     global_logger(ConsoleLogger(Error));
+
+    method_name = ARGS[1]
+
+    method = spatially_balanced_bon
+    if method_name == "adaptive"
+        method = adaptive_bon
+    elseif method_name == "random"
+        method = random_bon
+    elseif method_name == "balanced"
+        method = spatially_balanced_bon
+    end
 
     bioclim = read_bioclim(joinpath("data"))
 
     prop_baseline = 0.25:0.05:0.75
     Ntotals = 50:50:500
-    tilting = 3.
+    tilting = 5.
 
     dfs = []
 
@@ -54,11 +61,11 @@ function main()
     for p in prop_baseline
         for n in Ntotals
             df = run_treatment(
-                bioclim,
                 sr;
                 total_samples = n,
                 baseline_proportion = p,
-                tilting = tilting
+                tilting = tilting,
+                method = method
             )
             df.n_total = fill(n, nrow(df))
             df.prop_baseline = fill(p, nrow(df))
@@ -69,11 +76,15 @@ function main()
     total_df = vcat(dfs...)
 
 
+    outdir = joinpath("artifacts", method_name)
+    mkpath(outdir)
+
     job_id = ENV["SLURM_ARRAY_TASK_ID"]
-    CSV.write(joinpath("artifacts", "replicate_$job_id.csv"), total_df)
+    CSV.write(joinpath("artifacts", outdir, "replicate_$job_id.csv"), total_df)
 
     return total_df
 end 
+
 
 
 main()

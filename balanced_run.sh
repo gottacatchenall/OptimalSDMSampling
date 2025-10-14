@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --account=def-tpoisot
-#SBATCH --job-name=RangeShiftSampling 
+#SBATCH --job-name=BalancedRangeShiftSampling 
 #SBATCH --output=%x-%A-%a.out
 #SBATCH --nodes=1               
 #SBATCH --ntasks=1               
@@ -12,4 +12,4 @@
 export JULIA_DEPOT_PATH="/project/def-tpoisot/mcatchen/JuliaEnvironments/OptimalSDMSampling"
 
 module load julia/1.11.3
-julia main.jl
+julia main.jl balanced

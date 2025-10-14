@@ -56,6 +56,8 @@ function captured_diff(predicted_prev, predicted_future, true_prev, true_future)
     (area(true_loss .& predicted_loss)  + area(true_gain .& predicted_gain)) / (area(true_loss)+area(true_gain))
 end
 
+
+
 function compute_metrics(
     true_ranges,
     predicted_ranges
@@ -77,6 +79,8 @@ function compute_metrics(
         dict[:captured_loss] = captured_loss(predicted_ranges[t-1], predicted_ranges[t],true_ranges[t-1], true_ranges[t])
         dict[:captured_gain] = captured_gain(predicted_ranges[t-1], predicted_ranges[t],true_ranges[t-1], true_ranges[t])
         dict[:captured_change] = captured_diff(predicted_ranges[t-1], predicted_ranges[t],true_ranges[t-1], true_ranges[t])
+        dict[:range_error] = range_error(true_ranges[t], predicted_ranges[t])
+
         push!(dicts, dict)
     end 
 

@@ -1,11 +1,35 @@
 
+function adaptive_bon(n_obs, domain, u, α)
+    BONs.sample(
+        BalancedAcceptance(n_obs), 
+        domain, 
+        inclusion = BONs.tilt(u, α)
+    )
+end
+
+function spatially_balanced_bon(n_obs, domain, u, α)
+    BONs.sample(
+        BalancedAcceptance(n_obs), 
+        domain, 
+    )
+end
+
+
+function random_bon(n_obs, domain, u, α)
+    BONs.sample(
+        SimpleRandom(n_obs), 
+        domain, 
+    )
+end
+
 
 function adaptive_sampling_treament(
     sr::ShiftingRange;
     total_samples = 100,
     baseline_proportion = 0.2,
     baseline_method = BalancedAcceptance,
-    α = 3.
+    update_method = adaptive_bon,
+    α = 5.
 )
     domain = sr.predictors[1][1]
 
@@ -25,11 +49,8 @@ function adaptive_sampling_treament(
     ranges, uncertainties = [r], [u]
 
     for t in 2:n_t 
-        bon_t = BONs.sample(
-            BalancedAcceptance(obs_per_future_timestep[t-1]), 
-            domain, 
-            inclusion = BONs.tilt(u, α)
-        )
+        bon_t = update_method(obs_per_future_timestep[t-1], domain, u, α) 
+
         occ_t = sample_occurrence(sr, bon_t; t = t)
 
         Xₜ, yₜ, tₜ = get_features_and_labels(sr, occ_t)
@@ -53,19 +74,21 @@ function get_ranges(sr)
 end
 
 
+
 function run_treatment(
-    bioclim,
     sr;
     total_samples = 150,
     baseline_proportion = 0.25,
-    tilting = 3.
+    tilting = 3.,
+    method = adaptive_bon
 )
     true_ranges = [sr.scores[t] .> sr.threshold for t in 1:num_timesteps(sr)]
     predicted_ranges, _ = adaptive_sampling_treament(
         sr; 
         baseline_proportion = baseline_proportion, 
         total_samples = total_samples, 
-        α = tilting
+        α = tilting,
+        update_method = method
     )
     DataFrame(compute_metrics(true_ranges, predicted_ranges))
 end 
