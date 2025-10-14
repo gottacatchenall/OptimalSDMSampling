@@ -7,7 +7,9 @@ using Statistics
 using Distributions
 using Random
 using XGBoost
+using EvoTrees
 using LinearAlgebra
+using BenchmarkTools
 using DataFrames, CSV
 using Logging
 using ProgressMeter
@@ -16,12 +18,12 @@ const BONs = BiodiversityObservationNetworks
 const MV = MultivariateStats
 const SDT = SpeciesDistributionToolkit
 
-include(joinpath("src", "bioclim.jl"))
-include(joinpath("src", "niche.jl"))
-include(joinpath("src", "rangeshift.jl"))
-include(joinpath("src", "occurrence.jl"))
-include(joinpath("src", "fnl.jl"))
-include(joinpath("src", "plotting.jl"))
+include("bioclim.jl")
+include("niche.jl")
+include("rangeshift.jl")
+include("occurrence.jl")
+include("fnl.jl")
+include("plotting.jl")
 
 
 function get_features_and_labels(sr::ShiftingRange, occ::Occurrences)
