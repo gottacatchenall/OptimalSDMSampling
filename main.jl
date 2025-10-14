@@ -22,7 +22,7 @@ include(joinpath("src", "niche.jl"))
 include(joinpath("src", "rangeshift.jl"))
 include(joinpath("src", "occurrence.jl"))
 include(joinpath("src", "fnl.jl"))
-include(joinpath("src", "plotting.jl"))
+#include(joinpath("src", "plotting.jl"))
 include(joinpath("src", "sdm.jl"))
 include(joinpath("src", "metrics.jl"))
 include(joinpath("src", "treatments.jl"))
@@ -42,7 +42,7 @@ function main()
 
     dfs = []
 
-    prog = Progress(length(Ntotals)*length(prop_baseline))
+    #prog = Progress(length(Ntotals)*length(prop_baseline))
 
     num_layers = length(bioclim[begin])
     niche = LogisticNiche(
@@ -63,7 +63,7 @@ function main()
             df.n_total = fill(n, nrow(df))
             df.prop_baseline = fill(p, nrow(df))
             push!(dfs, df)
-            next!(prog)
+            #next!(prog)
         end 
     end 
     total_df = vcat(dfs...)
