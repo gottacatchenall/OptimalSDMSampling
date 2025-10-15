@@ -10,7 +10,8 @@ using XGBoost
 using LinearAlgebra
 using DataFrames, CSV
 using Logging
-# using ProgressMeter
+
+#using ProgressMeter
 
 const BONs = BiodiversityObservationNetworks
 const MV = MultivariateStats
@@ -35,12 +36,12 @@ function main()
 
     bioclim = read_bioclim(joinpath("data"))
 
-    Ntotals = 50:50:500
+    n = 250
     alphas = 1:0.5:10
 
     dfs = []
 
-    #prog = Progress(length(alphas)*length(prop_baseline))
+    #prog = Progress(length(alphas))
 
     num_layers = length(bioclim[begin])
     niche = LogisticNiche(
@@ -50,18 +51,16 @@ function main()
     sr = get_shifting_range(niche, bioclim)
 
     for tilting in alphas
-        for n in Ntotals
-            df = run_treatment(
-                sr;
-                total_samples = n,
-                tilting = tilting,
-                method = method
-            )
-            df.n_total = fill(n, nrow(df))
-            df.alpha = fill(tilting, nrow(df))
-            push!(dfs, df)
-            #next!(prog)
-        end 
+        df = run_treatment(
+            sr;
+            total_samples = n,
+            tilting = tilting,
+            method = method
+        )
+        df.n_total = fill(n, nrow(df))
+        df.alpha = fill(tilting, nrow(df))
+        push!(dfs, df)
+        #next!(prog)
     end 
     total_df = vcat(dfs...)
 

@@ -6,8 +6,8 @@
 #SBATCH --ntasks=1               
 #SBATCH --cpus-per-task=1        
 #SBATCH --mem-per-cpu=16G 
-#SBATCH --array=1-512 
-#SBATCH --time=2:00:00         
+#SBATCH --array=1-999 
+#SBATCH --time=0:20:00         
 
 export JULIA_DEPOT_PATH="/project/def-tpoisot/mcatchen/JuliaEnvironments/OptimalSDMSampling"
 
