@@ -37,7 +37,7 @@ function main()
     bioclim = read_bioclim(joinpath("data"))
 
     n = 250
-    alphas = 1:0.5:10
+    alphas = 1:0.25:10
 
     dfs = []
 
