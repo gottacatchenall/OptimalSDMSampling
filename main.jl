@@ -28,7 +28,7 @@ include(joinpath("src", "metrics.jl"))
 include(joinpath("src", "treatments.jl"))
 
 function main()
-    global_logger(ConsoleLogger(Error));
+    global_logger(ConsoleLogger(Error))
 
     method_name = ARGS[1]
 
@@ -45,7 +45,7 @@ function main()
 
     prop_baseline = 0.25:0.05:0.75
     Ntotals = 50:50:500
-    tilting = 5.
+    tilting = 5.0
 
     dfs = []
 
@@ -53,8 +53,8 @@ function main()
 
     num_layers = length(bioclim[begin])
     niche = LogisticNiche(
-        centers = rand(Uniform(0.1, 0.5), num_layers),
-        shapes = rand(Normal(0., 0.3), num_layers)
+        centers=rand(Uniform(0.1, 0.5), num_layers),
+        shapes=rand(Normal(0.0, 0.3), num_layers)
     )
     sr = get_shifting_range(niche, bioclim)
 
@@ -62,17 +62,17 @@ function main()
         for n in Ntotals
             df = run_treatment(
                 sr;
-                total_samples = n,
-                baseline_proportion = p,
-                tilting = tilting,
-                method = method
+                total_samples=n,
+                baseline_proportion=p,
+                tilting=tilting,
+                method=method
             )
             df.n_total = fill(n, nrow(df))
             df.prop_baseline = fill(p, nrow(df))
             push!(dfs, df)
             #next!(prog)
-        end 
-    end 
+        end
+    end
     total_df = vcat(dfs...)
 
 
@@ -83,7 +83,7 @@ function main()
     CSV.write(joinpath(outdir, "replicate_$job_id.csv"), total_df)
 
     return total_df
-end 
+end
 
 
 
